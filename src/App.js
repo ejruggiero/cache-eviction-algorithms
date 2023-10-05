@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import EvictionAlg from './EvictionAlg';
 import Score from './Score';
+import DataElement from './DataElement';
 import 'bootstrap/dist/css/bootstrap.min.css';
 <link
   rel="stylesheet"
@@ -15,20 +16,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <>
-      <Container fluid className="m-4">
-        {/* <Row className="justify-content-md-end">
-          <Col lg="2">
-            <Score></Score>
-        </Col>
-        </Row>
-        <Row className="justify-content-md-center">
-          <Col lg="3">
-            <EvictionAlg></EvictionAlg>
-          </Col>
-        </Row> */}
+      <Container fluid className="p-4 ps-5">
         <Row>
           <Col md={{ span: 3, offset: 4 }}><EvictionAlg></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 3 }}><Score></Score></Col>
+        </Row>
+        <Row>
+          <Col>
+            <div style={{lineHeight: 18}} class="invisible">vertical space</div>
+            <DataElement></DataElement>
+          </Col>
         </Row>
       </Container>
     </>
