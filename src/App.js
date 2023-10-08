@@ -5,6 +5,8 @@ import Col from 'react-bootstrap/Col';
 import EvictionAlg from './EvictionAlg';
 import Score from './Score';
 import DataElement from './DataElement';
+import Cache from './Cache';
+import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 <link
   rel="stylesheet"
@@ -13,7 +15,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
   crossorigin="anonymous"
 />
 
+
 function App() {
+  let chars = [{char: '🦊'}, {char: '🐴'}, {char: '🐷'}, {char:'😜'}, {char:'😎'}, {char:'🙈'}, {char:'❤'}, {char:'🧠'}]
+  let availableChars = chars
+  let dataElems = availableChars.slice(0, 5)
+
+  useEffect(() => {
+
+  })
   return (
     <>
       <Container fluid className="p-4 ps-5">
@@ -21,10 +31,14 @@ function App() {
           <Col md={{ span: 3, offset: 4 }}><EvictionAlg></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 3 }}><Score></Score></Col>
         </Row>
+        <Row><div style={{lineHeight: 15}} class="invisible">vertical space</div></Row>
         <Row>
-          <Col>
-            <div style={{lineHeight: 18}} class="invisible">vertical space</div>
-            <DataElement></DataElement>
+          <Col md={{ span:2, offset:1}}>
+            <div style={{lineHeight: 3}} class="invisible">vertical space</div>
+            <DataElement char='🤷‍♂️'></DataElement>
+          </Col>
+          <Col md={{span:8, offset:1}}>
+            <Cache dataElems={dataElems}></Cache>
           </Col>
         </Row>
       </Container>
