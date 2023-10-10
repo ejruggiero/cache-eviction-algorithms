@@ -6,8 +6,10 @@ import EvictionAlg from './EvictionAlg';
 import Score from './Score';
 import DataElement from './DataElement';
 import Cache from './Cache';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { v4 as uuidv4 } from 'uuid';
+
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -15,15 +17,70 @@ import 'bootstrap/dist/css/bootstrap.min.css';
   crossorigin="anonymous"
 />
 
+// sources:
+//https://stackoverflow.com/questions/373157/how-can-i-pass-a-reference-to-a-function-with-parameters
+// https://stackoverflow.com/questions/321113/how-can-i-pre-set-arguments-in-javascript-function-call-partial-function-appli
+function partial(func /*, 0..n args */) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return function() {
+    var allArguments = args.concat(Array.prototype.slice.call(arguments));
+    return func.apply(this, allArguments);
+  };
+}
 
 function App() {
-  let chars = [{char: '🦊'}, {char: '🐴'}, {char: '🐷'}, {char:'😜'}, {char:'😎'}, {char:'🙈'}, {char:'❤'}, {char:'🧠'}]
-  let availableChars = chars
-  let dataElems = availableChars.slice(0, 5)
+  let chars = ['🦊', '🐴', '🐷', '😜', '😎', '🙈', '❤', '🧠']
+  let [dataElemsInCache, setDataElemsInCache] = useState([]);
+  let [availableChars, setAvailableChars] = useState(chars);
 
-  useEffect(() => {
+  // initially filling the cache
+  if (dataElemsInCache.length < 5) {
+    console.log("INIT TRIGGERED")
+    setTimeout(() => {
+      //fillCache(dataElemsInCache, availableChars);
+      setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: availableChars[0]}]);
+      setAvailableChars([...availableChars].splice(1));
+      //setDataElemsInCache(dataElemsInCache.push({key: uuidv4(), char: availableChars.shift()}))
+      console.log(availableChars);
+    }, 1000);
+  }
 
-  })
+  function fifoEvict(e) {
+    const originalEmoji = e.target.innerHTML;
+    if (dataElemsInCache.length === 5 && dataElemsInCache[0].id === e.target.id) {
+      console.log("clicked")
+      console.log(e)
+      document.getElementById(e.target.id).disabled = "disabled";
+      document.getElementById(e.target.id).textContent = '✅';
+      setTimeout(() => {
+        document.getElementById(e.target.id).style.display = "none"; // remove earliest added elem
+        // update elems in cache
+        let tempArr = dataElemsInCache.map((x) => x);
+        tempArr.shift();
+        // tempArr[4] = {id: uuidv4(), char: availableChars[0]};
+        tempArr[4] = {id: uuidv4(), char: document.getElementById("incoming-elem").innerHTML};
+        setDataElemsInCache(tempArr);
+
+        document.getElementById("incoming-elem").textContent = availableChars[0];
+
+        tempArr = availableChars.map((x) => x);
+        tempArr.push(originalEmoji); // adding the clicked emoji back to available chars
+        tempArr.shift(); // removing the emoji that became incoming elem
+        setAvailableChars(tempArr);
+
+      }, 3000);
+    } else if (dataElemsInCache.length === 5) {
+      console.log("incorrect");
+      document.getElementById(e.target.id).textContent = '❌';
+      setTimeout(() => {
+        document.getElementById(e.target.id).textContent = originalEmoji;
+      }, 3000);
+    }
+    else {
+      console.log("less than 5 items")
+    }
+  }
+
   return (
     <>
       <Container fluid className="p-4 ps-5">
@@ -35,10 +92,10 @@ function App() {
         <Row>
           <Col md={{ span:2, offset:1}}>
             <div style={{lineHeight: 3}} class="invisible">vertical space</div>
-            <DataElement char='🤷‍♂️'></DataElement>
+            <DataElement id="incoming-elem" char='🤷‍♂️'></DataElement>
           </Col>
           <Col md={{span:8, offset:1}}>
-            <Cache dataElems={dataElems}></Cache>
+            <Cache dataElems={dataElemsInCache} onClick={fifoEvict}></Cache>
           </Col>
         </Row>
       </Container>

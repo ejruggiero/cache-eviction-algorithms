@@ -1,9 +1,8 @@
 import React from 'react'
 import './DataElement.css';
 
-export default function DataElement({char}) {
-  console.log({char})
+export default function DataElement({id, char, onClick, dataElems}) {
   return (
-    <button class="btn btn-warning btn-circle btn-xl" style={{fontSize: "40px"}}>{char}</button>
+    <button id={id} class="btn btn-warning btn-circle btn-xl" style={{fontSize: "50px"}} onClick={onClick}>{char}</button>
   )
 }
