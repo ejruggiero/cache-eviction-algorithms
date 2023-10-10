@@ -1,10 +1,14 @@
 import React from 'react'
 
-export default function Score() {
+export default function Score({score}) {
+  let suffix = "points";
+  if (score === 1) {
+      suffix = "point";
+  }
   return (
     <>
-    <label class="h2">0</label>
-    <span class="h2"> points &#11088;</span>
+    <label class="h2">{score}</label>
+    <span class="h2"> {suffix} &#11088;</span>
     </>
   )
 }

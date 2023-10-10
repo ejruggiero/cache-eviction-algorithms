@@ -32,32 +32,32 @@ function App() {
   let chars = ['🦊', '🐴', '🐷', '😜', '😎', '🙈', '❤', '🧠']
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
   let [availableChars, setAvailableChars] = useState(chars);
+  let [score, setScore] = useState(0);
 
   // initially filling the cache
   if (dataElemsInCache.length < 5) {
     console.log("INIT TRIGGERED")
     setTimeout(() => {
-      //fillCache(dataElemsInCache, availableChars);
       setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: availableChars[0]}]);
       setAvailableChars([...availableChars].splice(1));
-      //setDataElemsInCache(dataElemsInCache.push({key: uuidv4(), char: availableChars.shift()}))
       console.log(availableChars);
     }, 1000);
   }
-
+  
   function fifoEvict(e) {
     const originalEmoji = e.target.innerHTML;
+    // if elem clicked is correct
     if (dataElemsInCache.length === 5 && dataElemsInCache[0].id === e.target.id) {
       console.log("clicked")
       console.log(e)
       document.getElementById(e.target.id).disabled = "disabled";
       document.getElementById(e.target.id).textContent = '✅';
+      setScore(score+1);
       setTimeout(() => {
         document.getElementById(e.target.id).style.display = "none"; // remove earliest added elem
         // update elems in cache
         let tempArr = dataElemsInCache.map((x) => x);
         tempArr.shift();
-        // tempArr[4] = {id: uuidv4(), char: availableChars[0]};
         tempArr[4] = {id: uuidv4(), char: document.getElementById("incoming-elem").innerHTML};
         setDataElemsInCache(tempArr);
 
@@ -69,15 +69,13 @@ function App() {
         setAvailableChars(tempArr);
 
       }, 3000);
+    // if elem clicked is incorrect
     } else if (dataElemsInCache.length === 5) {
       console.log("incorrect");
       document.getElementById(e.target.id).textContent = '❌';
       setTimeout(() => {
         document.getElementById(e.target.id).textContent = originalEmoji;
-      }, 3000);
-    }
-    else {
-      console.log("less than 5 items")
+      }, 2000);
     }
   }
 
@@ -86,7 +84,7 @@ function App() {
       <Container fluid className="p-4 ps-5">
         <Row>
           <Col md={{ span: 3, offset: 4 }}><EvictionAlg></EvictionAlg></Col>
-          <Col md={{ span: 2, offset: 3 }}><Score></Score></Col>
+          <Col md={{ span: 2, offset: 3 }}><Score score={score}></Score></Col>
         </Row>
         <Row><div style={{lineHeight: 15}} class="invisible">vertical space</div></Row>
         <Row>
