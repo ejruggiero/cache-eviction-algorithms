@@ -1,9 +1,9 @@
 /* source: https://www.educative.io/answers/how-to-get-circular-buttons-in-bootstrap-4 */
 .btn-circle.btn-xl {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     padding: 13px 18px;
-    border-radius: 60px;
-    font-size: 15px;
+    border-radius: 100px;
+    font-size: 80px;
     text-align: center;
 }
