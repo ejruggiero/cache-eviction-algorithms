@@ -12,8 +12,10 @@ export default function Cache({dataElems, onClick}) {
     }
     return (
     
-    <div class="p-5 bg-secondary rounded">
+    <div class="bg-secondary rounded p-4" style={{"height" : "100%"}}>
         <Row>
+            {/* <button id="cacheInitialHeight" class="btn btn-xl btn-circle invisible"></button>
+            <Col md={{span:1}}></Col> */}
             {rows}
         </Row>
         {/* <Row>

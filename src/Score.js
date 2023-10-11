@@ -7,8 +7,8 @@ export default function Score({score}) {
   }
   return (
     <>
-    <label class="h2">{score}</label>
-    <span class="h2"> {suffix} &#11088;</span>
+    <label style={{fontSize: "40px"}}>{score}</label>
+    <span style={{fontSize: "40px"}}> {suffix} &#11088;</span>
     </>
   )
 }

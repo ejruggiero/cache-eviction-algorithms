@@ -29,7 +29,7 @@ function partial(func /*, 0..n args */) {
 }
 
 function App() {
-  let chars = ['🦊', '🐴', '🐷', '😜', '😎', '🙈', '❤', '🧠']
+  let chars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖']
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
   let [availableChars, setAvailableChars] = useState(chars);
   let [score, setScore] = useState(0);
@@ -37,6 +37,7 @@ function App() {
   // initially filling the cache
   if (dataElemsInCache.length < 5) {
     console.log("INIT TRIGGERED")
+    //document.getElementById("cacheInitialHeight").style.display = "none";
     setTimeout(() => {
       setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: availableChars[0]}]);
       setAvailableChars([...availableChars].splice(1));
@@ -58,10 +59,10 @@ function App() {
         // update elems in cache
         let tempArr = dataElemsInCache.map((x) => x);
         tempArr.shift();
-        tempArr[4] = {id: uuidv4(), char: document.getElementById("incoming-elem").innerHTML};
+        tempArr[4] = {id: uuidv4(), char: document.getElementById("incomingElem").innerHTML};
         setDataElemsInCache(tempArr);
 
-        document.getElementById("incoming-elem").textContent = availableChars[0];
+        document.getElementById("incomingElem").textContent = availableChars[0];
 
         tempArr = availableChars.map((x) => x);
         tempArr.push(originalEmoji); // adding the clicked emoji back to available chars
@@ -73,9 +74,11 @@ function App() {
     } else if (dataElemsInCache.length === 5) {
       console.log("incorrect");
       document.getElementById(e.target.id).textContent = '❌';
+      document.getElementById(e.target.id).disabled = "disabled";
       setTimeout(() => {
         document.getElementById(e.target.id).textContent = originalEmoji;
-      }, 2000);
+        document.getElementById(e.target.id).disabled = "";
+      }, 1000);
     }
   }
 
@@ -83,16 +86,16 @@ function App() {
     <>
       <Container fluid className="p-4 ps-5">
         <Row>
-          <Col md={{ span: 3, offset: 4 }}><EvictionAlg></EvictionAlg></Col>
-          <Col md={{ span: 2, offset: 3 }}><Score score={score}></Score></Col>
+          <Col md={{ span: 4, offset: 4 }}><EvictionAlg></EvictionAlg></Col>
+          <Col md={{ span: 2, offset: 2 }}><Score score={score}></Score></Col>
         </Row>
         <Row><div style={{lineHeight: 15}} class="invisible">vertical space</div></Row>
         <Row>
           <Col md={{ span:2, offset:1}}>
-            <div style={{lineHeight: 3}} class="invisible">vertical space</div>
-            <DataElement id="incoming-elem" char='🤷‍♂️'></DataElement>
+            <div style={{lineHeight: 1.5}} class="invisible">vertical space</div>
+            <DataElement id="incomingElem" char='🤷‍♂️'></DataElement>
           </Col>
-          <Col md={{span:8, offset:1}}>
+          <Col md={{span:7, offset:1}}>
             <Cache dataElems={dataElemsInCache} onClick={fifoEvict}></Cache>
           </Col>
         </Row>
