@@ -89,6 +89,19 @@ function App() {
     }
   }
 
+  function lfu(e) {
+    console.log("in lfu");
+  }
+
+  function handleClick(e) {
+    if(evictionAlg === "fifo") {
+      fifo(e);
+    }
+    else if (evictionAlg === "lfu") {
+      lfu(e);
+    }
+  }
+
   return (
     <>
       <Container fluid className="p-4 ps-5">
@@ -97,17 +110,16 @@ function App() {
           <button className="btn bg-warning text-center rounded" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
   {open ? <Popup text="Hello!" closePopup={() => setOpen(false)} /> : null}
           </Col>
-          <Col md={{ span: 4, offset: 3 }}><EvictionAlg></EvictionAlg></Col>
+          <Col md={{ span: 4, offset: 3 }}><EvictionAlg setEvictionAlg={setEvictionAlg}></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 2 }}><Score score={score}></Score></Col>
         </Row>
-        <Row><div style={{lineHeight: 15}} class="invisible">vertical space</div></Row>
+        <Row><div style={{lineHeight: 15}} className="invisible">vertical space</div></Row>
         <Row>
           <Col md={{ span:1}}>
-            {/* <div style={{lineHeight: 1}} class="invisible">vertical space</div> */}
             <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-5"></DataElement>
           </Col>
             <Col md={{span:10, offset:1}}>
-              <Cache dataElems={dataElemsInCache} onClick={fifo}></Cache>
+              <Cache id="cache" dataElems={dataElemsInCache} onClick={handleClick}></Cache>
             </Col>
         </Row>
       </Container>
