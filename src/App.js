@@ -35,13 +35,12 @@ function App() {
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
   let [availableChars, setAvailableChars] = useState(chars);
   let [score, setScore] = useState(0);
-  let [open, setOpen] = useState(true);
+  let [open, setOpen] = useState(true); // handles popup
   let [evictionAlg, setEvictionAlg] = useState("fifo");
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
     console.log("INIT TRIGGERED")
-    //document.getElementById("cacheInitialHeight").style.display = "none";
     setTimeout(() => {
       setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: availableChars[0]}]);
       setAvailableChars([...availableChars].splice(1));
@@ -101,6 +100,15 @@ function App() {
       lfu(e);
     }
   }
+
+  // reset everything when evictionAlg is changed
+  useEffect(() => {
+    document.getElementById("incomingElem").textContent = '🤷‍♂️'
+    setAvailableChars(chars);
+    setScore(0);
+    setDataElemsInCache([]);
+    console.log("eviction alg is " + evictionAlg);
+  }, [evictionAlg]);
 
   return (
     <>
