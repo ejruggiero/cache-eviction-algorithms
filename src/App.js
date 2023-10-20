@@ -36,6 +36,7 @@ function App() {
   let [availableChars, setAvailableChars] = useState(chars);
   let [score, setScore] = useState(0);
   let [open, setOpen] = useState(true);
+  let [evictionAlg, setEvictionAlg] = useState("fifo");
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
@@ -48,12 +49,10 @@ function App() {
     }, 1000);
   }
   
-  function fifoEvict(e) {
+  function fifo(e) {
     const originalEmoji = e.target.innerHTML;
     // if elem clicked is correct
     if (dataElemsInCache.length === capacity && dataElemsInCache[0].id === e.target.id) {
-      console.log("clicked")
-      console.log(e)
       document.getElementById(e.target.id).disabled = "disabled";
       document.getElementById(e.target.id).textContent = '✅';
       setScore(score+1);
@@ -76,11 +75,16 @@ function App() {
     // if elem clicked is incorrect
     } else if (dataElemsInCache.length === capacity) {
       console.log("incorrect");
-      document.getElementById(e.target.id).textContent = '❌';
-      document.getElementById(e.target.id).disabled = "disabled";
+      var elem = document.getElementById(e.target.id);
+      if (elem) {
+        elem.textContent = '❌';
+        elem.disabled = "disabled";
+      }
       setTimeout(() => {
-        document.getElementById(e.target.id).textContent = originalEmoji;
-        document.getElementById(e.target.id).disabled = "";
+        if (elem) {
+          elem.textContent = originalEmoji;
+          elem.disabled = "";
+        }
       }, 1000);
     }
   }
@@ -103,7 +107,7 @@ function App() {
             <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-5"></DataElement>
           </Col>
             <Col md={{span:10, offset:1}}>
-              <Cache dataElems={dataElemsInCache} onClick={fifoEvict}></Cache>
+              <Cache dataElems={dataElemsInCache} onClick={fifo}></Cache>
             </Col>
         </Row>
       </Container>
