@@ -2,13 +2,14 @@ import './App.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import EvictionAlg from './EvictionAlg';
-import Score from './Score';
-import DataElement from './DataElement';
-import Cache from './Cache';
+import EvictionAlg from './components/EvictionAlg/EvictionAlg';
+import Score from './components/Score/Score';
+import DataElement from './components/DataElement/DataElement';
+import Cache from './components/Cache/Cache';
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
+import { Popup } from "./components/Popup/Popup";
 
 <link
   rel="stylesheet"
@@ -34,6 +35,7 @@ function App() {
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
   let [availableChars, setAvailableChars] = useState(chars);
   let [score, setScore] = useState(0);
+  let [open, setOpen] = useState(true);
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
@@ -87,7 +89,11 @@ function App() {
     <>
       <Container fluid className="p-4 ps-5">
         <Row>
-          <Col md={{ span: 4, offset: 4 }}><EvictionAlg></EvictionAlg></Col>
+          <Col md={{ span: 1 }}>
+          <button className="btn bg-warning text-center rounded" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
+  {open ? <Popup text="Hello!" closePopup={() => setOpen(false)} /> : null}
+          </Col>
+          <Col md={{ span: 4, offset: 3 }}><EvictionAlg></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 2 }}><Score score={score}></Score></Col>
         </Row>
         <Row><div style={{lineHeight: 15}} class="invisible">vertical space</div></Row>

@@ -1,5 +1,5 @@
 import React from 'react'
-import DataElement from './DataElement'
+import DataElement from '../DataElement/DataElement'
 import { Row, Col } from 'react-bootstrap'
 
 export default function Cache({dataElems, onClick}) {
