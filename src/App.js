@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import { Popup } from "./components/Popup/Popup";
+import Counts from "./components/Counts/Counts";
 
 <link
   rel="stylesheet"
@@ -37,6 +38,7 @@ function App() {
   let [score, setScore] = useState(0);
   let [open, setOpen] = useState(true); // handles popup
   let [evictionAlg, setEvictionAlg] = useState("fifo");
+  let [countsVisibility, setCountsVisibility] = useState("invisible"); // "" or "invisible"
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
@@ -101,6 +103,21 @@ function App() {
     }
   }
 
+  // set line height of invisible space based on eviction alg to make sure
+  // cache is always visible
+  // show counts table if eviction alg is not fifo
+  useEffect(() => {
+    if (evictionAlg === "fifo") {
+      setCountsVisibility("invisible")
+      // document.getElementById("invisibleSpace").style.lineHeight = "15";
+      // console.log("line height: ", document.getElementById("invisibleSpace").style.lineHeight);
+    } else {
+      setCountsVisibility("");
+      // document.getElementById("invisibleSpace").style.lineHeight = "5";
+      // console.log("line height: ", document.getElementById("invisibleSpace").style.lineHeight);
+    }
+  }, [evictionAlg])
+
   // reset everything when evictionAlg is changed
   useEffect(() => {
     document.getElementById("incomingElem").textContent = '🤷‍♂️'
@@ -114,16 +131,19 @@ function App() {
     <>
       <Container fluid className="p-4 ps-5">
         <Row>
-          <Col md={{ span: 1 }}>
-          <button className="btn bg-warning text-center rounded" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
+          <Col md={{ span:1 }}>
+            <Counts className={countsVisibility}></Counts>
+          </Col>
+          <Col md={{ span: 1, offset: 2 }}>
+          <button className="btn bg-warning text-center rounded mt-1" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
   {open ? <Popup text="Hello!" closePopup={() => setOpen(false)} /> : null}
           </Col>
-          <Col md={{ span: 4, offset: 3 }}><EvictionAlg setEvictionAlg={setEvictionAlg}></EvictionAlg></Col>
+          <Col md={{ span: 4 }}><EvictionAlg setEvictionAlg={setEvictionAlg}></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 2 }}><Score score={score}></Score></Col>
         </Row>
-        <Row><div style={{lineHeight: 15}} className="invisible">vertical space</div></Row>
+        <Row><div id="invisibleSpace" style={{lineHeight: 3}} className="invisible">vertical space</div></Row>
         <Row>
-          <Col md={{ span:1}}>
+          <Col md={{ span:1 }}>
             <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-5"></DataElement>
           </Col>
             <Col md={{span:10, offset:1}}>
