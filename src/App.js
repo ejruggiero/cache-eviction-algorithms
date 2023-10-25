@@ -39,19 +39,31 @@ function App() {
   let [open, setOpen] = useState(true); // handles popup
   let [evictionAlg, setEvictionAlg] = useState("fifo");
   let [countsVisibility, setCountsVisibility] = useState("invisible"); // "" or "invisible"
+  let [dataElemsAndCounts, setDataElemsAndCounts] = useState([]);
+  let [disabledEvictionAlg, setDisabledEvictionAlg] = useState("true"); // "" or "true"
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
     console.log("INIT TRIGGERED")
     setTimeout(() => {
-      setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: availableChars[0]}]);
+      const newChar = availableChars[0];
+      setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: newChar}]);
       setAvailableChars([...availableChars].splice(1));
       console.log(availableChars);
+      if(evictionAlg !== "fifo") {
+        setDataElemsAndCounts([...dataElemsAndCounts, {char: newChar, count: 1}]);
+      }
+      //setDisabledEvictionAlg("");
+      if (dataElemsInCache.length === capacity-1) {
+        console.log("capacity is full");
+        setDisabledEvictionAlg("");
+      }
     }, 1000);
   }
   
   function fifo(e) {
     const originalEmoji = e.target.innerHTML;
+    console.log("dataElemsAndCounts: ", dataElemsAndCounts);
     // if elem clicked is correct
     if (dataElemsInCache.length === capacity && dataElemsInCache[0].id === e.target.id) {
       document.getElementById(e.target.id).disabled = "disabled";
@@ -92,6 +104,7 @@ function App() {
 
   function lfu(e) {
     console.log("in lfu");
+    console.log("dataElemsAndCounts: ", dataElemsAndCounts);
   }
 
   function handleClick(e) {
@@ -109,14 +122,14 @@ function App() {
   useEffect(() => {
     if (evictionAlg === "fifo") {
       setCountsVisibility("invisible")
-      // document.getElementById("invisibleSpace").style.lineHeight = "15";
+      document.getElementById("invisibleSpace").style.lineHeight = "15";
       // console.log("line height: ", document.getElementById("invisibleSpace").style.lineHeight);
     } else {
       setCountsVisibility("");
-      // document.getElementById("invisibleSpace").style.lineHeight = "5";
+      document.getElementById("invisibleSpace").style.lineHeight = "5";
       // console.log("line height: ", document.getElementById("invisibleSpace").style.lineHeight);
     }
-  }, [evictionAlg])
+  }, [evictionAlg]);
 
   // reset everything when evictionAlg is changed
   useEffect(() => {
@@ -124,6 +137,8 @@ function App() {
     setAvailableChars(chars);
     setScore(0);
     setDataElemsInCache([]);
+    setDataElemsAndCounts([]);
+    setDisabledEvictionAlg("true");
     console.log("eviction alg is " + evictionAlg);
   }, [evictionAlg]);
 
@@ -132,16 +147,17 @@ function App() {
       <Container fluid className="p-4 ps-5">
         <Row>
           <Col md={{ span:1 }}>
-            <Counts className={countsVisibility}></Counts>
+            <Counts className={countsVisibility} dataElemsAndCounts={dataElemsAndCounts}></Counts>
           </Col>
           <Col md={{ span: 1, offset: 2 }}>
           <button className="btn bg-warning text-center rounded mt-1" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
-  {open ? <Popup text="Hello!" closePopup={() => setOpen(false)} /> : null}
+  {open ? <Popup text={[<h1>Welcome!</h1>, <p>Hello! Here you will learn three important cache eviction algorithms: first in first out (FIFO),
+     least recently used (LRU), and least frequently used (LFU). Change the algorithm you wish to practice by toggling this dropdown: </p>]} closePopup={() => setOpen(false)} /> : null}
           </Col>
-          <Col md={{ span: 4 }}><EvictionAlg setEvictionAlg={setEvictionAlg}></EvictionAlg></Col>
+          <Col md={{ span: 4 }}><EvictionAlg setEvictionAlg={setEvictionAlg} disabled={disabledEvictionAlg}></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 2 }}><Score score={score}></Score></Col>
         </Row>
-        <Row><div id="invisibleSpace" style={{lineHeight: 3}} className="invisible">vertical space</div></Row>
+        <Row><div id="invisibleSpace" style={{lineHeight: 15}} className="invisible">vertical space</div></Row>
         <Row>
           <Col md={{ span:1 }}>
             <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-5"></DataElement>

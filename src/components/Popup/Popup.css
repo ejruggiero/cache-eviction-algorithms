@@ -10,10 +10,10 @@
     }
     .popup-body {
     position: absolute;
-    left: 30%;
-    right: 30%;
-    bottom: 30%;
-    top: 30%;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    top: 10%;
     text-align: center;
     margin: auto;
     border-radius: 15px;
@@ -21,3 +21,7 @@
     background: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
+
+p {
+    font-size:20px;
+}
