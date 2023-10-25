@@ -5,7 +5,7 @@ export const Popup = ({ text, closePopup }) => {
     <div className="popup-container">
      <div className="popup-body">
       <>{text}</>
-      <button className="btn bg-warning text-center rounded" onClick={closePopup}>Close X</button>
+      <button class="button" className="btn bg-warning text-center rounded" onClick={closePopup}>Close X</button>
      </div>
     </div>
   );
