@@ -56,8 +56,10 @@ function App() {
       if(evictionAlg === "fifo") {
         newElem = {id: uuidv4(), char: newChar};
       }
-      else {
+      else if (evictionAlg === "lfu") {
         newElem = {id: uuidv4(), char: newChar, count: 1};
+      } else {
+        newElem = {id: uuidv4(), char: newChar, count: 0};
       }
       setDataElemsInCache([...dataElemsInCache, newElem]);
       
@@ -95,7 +97,7 @@ function App() {
       }, 2000);
     // if elem clicked is incorrect
     } else if (dataElemsInCache.length === capacity) {
-      console.log("incorrect");
+      //console.log("incorrect");
       var elem = document.getElementById(e.target.id);
       if (elem) {
         elem.textContent = '❌';
@@ -117,16 +119,16 @@ function App() {
     console.log('target: ', target);
     console.log('data elems in cache: ', dataElemsInCache);
     const incomingElemEmoji = document.getElementById("incomingElem").textContent;
+    const originalEmoji = document.getElementById(e.target.id).textContent;
     if (dataElemsInCache.length === capacity && target.id === e.target.id) {
-      const clickedEmoji = document.getElementById(e.target.id).textContent;
 
       document.getElementById(e.target.id).disabled = "disabled";
       document.getElementById(e.target.id).textContent = '✅';
       setScore(score+1);
       // if user clicks on correct elem
-      if (clickedEmoji === target.char) {
+      if (originalEmoji === target.char) {
         let tempArr = availableChars.map((x) => x);
-        tempArr.push(clickedEmoji); // adding the clicked emoji back to available chars
+        tempArr.push(originalEmoji); // adding the clicked emoji back to available chars
         tempArr.shift(); // removing the emoji that became incoming elem
         setAvailableChars(tempArr);
         // if it is a hit
@@ -140,10 +142,10 @@ function App() {
             setDataElemsInCache(tempArr);
             var elem = document.getElementById(e.target.id);
             if (elem) {
-              elem.textContent = clickedEmoji;
+              elem.textContent = originalEmoji;
               elem.disabled = "";
             }
-            // update incoming elem
+              // update incoming elem
             document.getElementById("incomingElem").textContent = availableChars[0];
           }, 2000);
         } else { // if its not a hit, evict
@@ -158,6 +160,18 @@ function App() {
           }, 2000);
         }
       }
+    } else if (dataElemsInCache.length === capacity) {
+      var elem = document.getElementById(e.target.id);
+      if (elem) {
+        elem.textContent = '❌';
+        elem.disabled = "disabled";
+      }
+      setTimeout(() => {
+        if (elem) {
+          elem.textContent = originalEmoji;
+          elem.disabled = "";
+        }
+      }, 1000);
     }
   }
 
@@ -217,11 +231,12 @@ function App() {
     setDisabledEvictionAlg("true");
     if (evictionAlg === "fifo") {
       setAvailableChars(fifoChars);
-    } else if (evictionAlg === "lfu") {
+    } else if (evictionAlg === "lfu" || evictionAlg === "lru") {
       setAvailableChars(lfuChars);
     }
     console.log("eviction alg is " + evictionAlg);
   }, [evictionAlg]);
+
 
   return (
     <>
