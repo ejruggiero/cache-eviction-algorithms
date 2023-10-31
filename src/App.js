@@ -19,17 +19,6 @@ import Counts from "./components/Counts/Counts";
   crossorigin="anonymous"
 />
 
-// sources:
-//https://stackoverflow.com/questions/373157/how-can-i-pass-a-reference-to-a-function-with-parameters
-// https://stackoverflow.com/questions/321113/how-can-i-pre-set-arguments-in-javascript-function-call-partial-function-appli
-function partial(func /*, 0..n args */) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  return function() {
-    var allArguments = args.concat(Array.prototype.slice.call(arguments));
-    return func.apply(this, allArguments);
-  };
-}
-
 function App() {
   const capacity = 5;
   // let chars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖']
@@ -41,9 +30,6 @@ function App() {
   let [score, setScore] = useState(0);
   let [open, setOpen] = useState(true); // handles popup
   let [evictionAlg, setEvictionAlg] = useState("fifo");
-  let [countsVisibility, setCountsVisibility] = useState("invisible"); // "" or "invisible"
-  //let [dataElemsAndCounts, setDataElemsAndCounts] = useState([]);
-  let [disabledEvictionAlg, setDisabledEvictionAlg] = useState("true"); // "" or "true"
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
@@ -62,12 +48,6 @@ function App() {
         newElem = {id: uuidv4(), char: newChar, count: 0};
       }
       setDataElemsInCache([...dataElemsInCache, newElem]);
-      
-      //setDisabledEvictionAlg("");
-      if (dataElemsInCache.length === capacity-1) {
-        console.log("capacity is full");
-        setDisabledEvictionAlg("");
-      }
     }, 1000);
   }
   
@@ -175,7 +155,7 @@ function App() {
     }
   }
 
-  // returns elem in cache that is target: either it is the incoming elem or
+  // for LFU. returns elem in cache that is target: either it is the incoming elem or
   // it has lowest count, tie breaking by LRU
   function findTarget() {
     // find earliest min count or return incoming elem if in cache
@@ -223,12 +203,16 @@ function App() {
 
   // reset everything when evictionAlg is changed
   useEffect(() => {
+    // clearing timeouts to avoid flickering issue of data elems
+    const highestId = window.setTimeout(() => {
+      for (let i = highestId; i >= 0; i--) {
+        window.clearInterval(i);
+      }
+    }, 0);
+
     document.getElementById("incomingElem").textContent = '🤷‍♂️'
-    // setAvailableChars(chars);
     setScore(0);
     setDataElemsInCache([]);
-    //setDataElemsAndCounts([]);
-    setDisabledEvictionAlg("true");
     if (evictionAlg === "fifo") {
       setAvailableChars(fifoChars);
     } else if (evictionAlg === "lfu" || evictionAlg === "lru") {
@@ -257,7 +241,7 @@ function App() {
      gain a point.</p>,
      <p>You can reopen this popup at any time by clicking on the Help button.</p>]} closePopup={() => setOpen(false)} /> : null}
           </Col>
-          <Col md={{ span: 4 }}><EvictionAlg setEvictionAlg={setEvictionAlg} disabled={disabledEvictionAlg}></EvictionAlg></Col>
+          <Col md={{ span: 4 }}><EvictionAlg setEvictionAlg={setEvictionAlg}></EvictionAlg></Col>
           <Col md={{ span: 2, offset: 2 }}><Score score={score}></Score></Col>
         </Row>
         <Row><div id="invisibleSpace" style={{lineHeight: 15}} className="invisible">vertical space</div></Row>
