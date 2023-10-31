@@ -7,3 +7,11 @@
     font-size: 80px;
     text-align: center;
 }
+
+.countLabel {
+    float: left;
+    /* padding: 0 1em; */
+    text-align: center;
+    font-size: 25px;
+    color: white;
+  }

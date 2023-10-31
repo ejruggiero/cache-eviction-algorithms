@@ -32,14 +32,17 @@ function partial(func /*, 0..n args */) {
 
 function App() {
   const capacity = 5;
-  let chars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖']
+  // let chars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖']
+  let fifoChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
+  let lfuChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🐉', '🐷', '🐴', '🐴', '🍀', '🍀', '😎', '🍀', '🙈', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
-  let [availableChars, setAvailableChars] = useState(chars);
+  // let [availableChars, setAvailableChars] = useState(chars);
+  let [availableChars, setAvailableChars] = useState(fifoChars);
   let [score, setScore] = useState(0);
   let [open, setOpen] = useState(true); // handles popup
   let [evictionAlg, setEvictionAlg] = useState("fifo");
   let [countsVisibility, setCountsVisibility] = useState("invisible"); // "" or "invisible"
-  let [dataElemsAndCounts, setDataElemsAndCounts] = useState([]);
+  //let [dataElemsAndCounts, setDataElemsAndCounts] = useState([]);
   let [disabledEvictionAlg, setDisabledEvictionAlg] = useState("true"); // "" or "true"
 
   // initially filling the cache
@@ -47,12 +50,17 @@ function App() {
     console.log("INIT TRIGGERED")
     setTimeout(() => {
       const newChar = availableChars[0];
-      setDataElemsInCache([...dataElemsInCache, {id: uuidv4(), char: newChar}]);
       setAvailableChars([...availableChars].splice(1));
-      console.log(availableChars);
-      if(evictionAlg !== "fifo") {
-        setDataElemsAndCounts([...dataElemsAndCounts, {char: newChar, count: 1}]);
+      //console.log(availableChars);
+      let newElem;
+      if(evictionAlg === "fifo") {
+        newElem = {id: uuidv4(), char: newChar};
       }
+      else {
+        newElem = {id: uuidv4(), char: newChar, count: 1};
+      }
+      setDataElemsInCache([...dataElemsInCache, newElem]);
+      
       //setDisabledEvictionAlg("");
       if (dataElemsInCache.length === capacity-1) {
         console.log("capacity is full");
@@ -63,7 +71,7 @@ function App() {
   
   function fifo(e) {
     const originalEmoji = e.target.innerHTML;
-    console.log("dataElemsAndCounts: ", dataElemsAndCounts);
+    //console.log("dataElemsAndCounts: ", dataElemsAndCounts);
     // if elem clicked is correct
     if (dataElemsInCache.length === capacity && dataElemsInCache[0].id === e.target.id) {
       document.getElementById(e.target.id).disabled = "disabled";
@@ -84,7 +92,7 @@ function App() {
         tempArr.shift(); // removing the emoji that became incoming elem
         setAvailableChars(tempArr);
 
-      }, 3000);
+      }, 2000);
     // if elem clicked is incorrect
     } else if (dataElemsInCache.length === capacity) {
       console.log("incorrect");
@@ -103,8 +111,78 @@ function App() {
   }
 
   function lfu(e) {
+    console.log('dataelemsincache[0]: ', dataElemsInCache[0]);
     console.log("in lfu");
-    console.log("dataElemsAndCounts: ", dataElemsAndCounts);
+    const target = findTarget();
+    console.log('target: ', target);
+    console.log('data elems in cache: ', dataElemsInCache);
+    const incomingElemEmoji = document.getElementById("incomingElem").textContent;
+    if (dataElemsInCache.length === capacity && target.id === e.target.id) {
+      const clickedEmoji = document.getElementById(e.target.id).textContent;
+
+      document.getElementById(e.target.id).disabled = "disabled";
+      document.getElementById(e.target.id).textContent = '✅';
+      setScore(score+1);
+      // if user clicks on correct elem
+      if (clickedEmoji === target.char) {
+        let tempArr = availableChars.map((x) => x);
+        tempArr.push(clickedEmoji); // adding the clicked emoji back to available chars
+        tempArr.shift(); // removing the emoji that became incoming elem
+        setAvailableChars(tempArr);
+        // if it is a hit
+        if (incomingElemEmoji === target.char) {
+          console.log("incomingElemEmoji === target.char");
+          setTimeout(() => {
+            // setDataElemsInCache(dataElemsInCache.map((x) => {return {id: x.id, char: x.char, count: x.count+1}}));
+            tempArr = dataElemsInCache.map((x) => x);
+            const foundIndex = tempArr.findIndex(x => x.id === target.id);
+            tempArr[foundIndex] = {id: target.id, char: target.char, count: target.count+1};
+            setDataElemsInCache(tempArr);
+            var elem = document.getElementById(e.target.id);
+            if (elem) {
+              elem.textContent = clickedEmoji;
+              elem.disabled = "";
+            }
+            // update incoming elem
+            document.getElementById("incomingElem").textContent = availableChars[0];
+          }, 2000);
+        } else { // if its not a hit, evict
+          tempArr = dataElemsInCache.filter(function(elem) {
+              return elem.id !== target.id;
+          });
+          tempArr[capacity-1] = {id: uuidv4(), char: document.getElementById("incomingElem").innerHTML, count:1};
+          setTimeout(() => {
+            setDataElemsInCache(tempArr);
+            // update incoming elem
+            document.getElementById("incomingElem").textContent = availableChars[0];
+          }, 2000);
+        }
+      }
+    }
+  }
+
+  // returns elem in cache that is target: either it is the incoming elem or
+  // it has lowest count, tie breaking by LRU
+  function findTarget() {
+    // find earliest min count or return incoming elem if in cache
+    let minCount = Number.MAX_SAFE_INTEGER;
+    let minElem;
+    const incomingEmoji = document.getElementById("incomingElem").textContent;
+    // dataElemsInCache.forEach(function (elem) {
+    //   if (elem.char === incomingEmoji) return elem;
+    //   if (elem.count < minCount)  minElem = elem;
+    // });
+    for (let i = 0; i < dataElemsInCache.length; i++) {
+      const elem = dataElemsInCache[i];
+      if (elem.char === incomingEmoji) return elem;
+      //console.log('elem.count: ', elem.count);
+      if (elem.count < minCount)  {
+        minElem = elem;
+        minCount = elem.count;
+      }
+      console.log('minCount: ', minCount);
+    }
+    return minElem;
   }
 
   function handleClick(e) {
@@ -119,26 +197,29 @@ function App() {
   // set line height of invisible space based on eviction alg to make sure
   // cache is always visible
   // show counts table if eviction alg is not fifo
-  useEffect(() => {
-    if (evictionAlg === "fifo") {
-      setCountsVisibility("invisible")
-      document.getElementById("invisibleSpace").style.lineHeight = "15";
-      // console.log("line height: ", document.getElementById("invisibleSpace").style.lineHeight);
-    } else {
-      setCountsVisibility("");
-      document.getElementById("invisibleSpace").style.lineHeight = "5";
-      // console.log("line height: ", document.getElementById("invisibleSpace").style.lineHeight);
-    }
-  }, [evictionAlg]);
+  // useEffect(() => {
+  //   if (evictionAlg === "fifo") {
+  //     setCountsVisibility("invisible")
+  //     document.getElementById("invisibleSpace").style.lineHeight = "15";
+  //   } else {
+  //     setCountsVisibility("");
+  //     document.getElementById("invisibleSpace").style.lineHeight = "5";
+  //   }
+  // }, [evictionAlg]);
 
   // reset everything when evictionAlg is changed
   useEffect(() => {
     document.getElementById("incomingElem").textContent = '🤷‍♂️'
-    setAvailableChars(chars);
+    // setAvailableChars(chars);
     setScore(0);
     setDataElemsInCache([]);
-    setDataElemsAndCounts([]);
+    //setDataElemsAndCounts([]);
     setDisabledEvictionAlg("true");
+    if (evictionAlg === "fifo") {
+      setAvailableChars(fifoChars);
+    } else if (evictionAlg === "lfu") {
+      setAvailableChars(lfuChars);
+    }
     console.log("eviction alg is " + evictionAlg);
   }, [evictionAlg]);
 
@@ -146,10 +227,10 @@ function App() {
     <>
       <Container fluid className="p-4 ps-5">
         <Row>
-          <Col md={{ span:1 }}>
+          {/* <Col md={{ span:1 }}>
             <Counts className={countsVisibility} dataElemsAndCounts={dataElemsAndCounts}></Counts>
-          </Col>
-          <Col md={{ span: 1, offset: 2 }}>
+          </Col> */}
+          <Col md={{ span: 1, offset: 3 }}>
           <button className="btn bg-warning text-center rounded mt-1" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
   {open ? <Popup text={[<h1>Welcome!</h1>, <p>Hello! Here you will learn three important cache eviction algorithms: first in first out (FIFO),
      least recently used (LRU), and least frequently used (LFU). Change the algorithm you wish to practice by toggling the dropdown at the top of the screen.</p>,
