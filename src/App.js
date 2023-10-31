@@ -33,7 +33,6 @@ function App() {
 
   // initially filling the cache
   if (dataElemsInCache.length < capacity) {
-    console.log("INIT TRIGGERED")
     setTimeout(() => {
       const newChar = availableChars[0];
       setAvailableChars([...availableChars].splice(1));
@@ -43,9 +42,9 @@ function App() {
         newElem = {id: uuidv4(), char: newChar};
       }
       else if (evictionAlg === "lfu") {
-        newElem = {id: uuidv4(), char: newChar, count: 1};
+        newElem = {id: uuidv4(), char: newChar, hits: 1};
       } else {
-        newElem = {id: uuidv4(), char: newChar, count: 0};
+        newElem = {id: uuidv4(), char: newChar, time: 0};
       }
       setDataElemsInCache([...dataElemsInCache, newElem]);
     }, 1000);
@@ -118,7 +117,7 @@ function App() {
             // setDataElemsInCache(dataElemsInCache.map((x) => {return {id: x.id, char: x.char, count: x.count+1}}));
             tempArr = dataElemsInCache.map((x) => x);
             const foundIndex = tempArr.findIndex(x => x.id === target.id);
-            tempArr[foundIndex] = {id: target.id, char: target.char, count: target.count+1};
+            tempArr[foundIndex] = {id: target.id, char: target.char, hits: target.hits+1};
             setDataElemsInCache(tempArr);
             var elem = document.getElementById(e.target.id);
             if (elem) {
@@ -132,7 +131,7 @@ function App() {
           tempArr = dataElemsInCache.filter(function(elem) {
               return elem.id !== target.id;
           });
-          tempArr[capacity-1] = {id: uuidv4(), char: document.getElementById("incomingElem").innerHTML, count:1};
+          tempArr[capacity-1] = {id: uuidv4(), char: document.getElementById("incomingElem").innerHTML, hits:1};
           setTimeout(() => {
             setDataElemsInCache(tempArr);
             // update incoming elem
@@ -170,9 +169,9 @@ function App() {
       const elem = dataElemsInCache[i];
       if (elem.char === incomingEmoji) return elem;
       //console.log('elem.count: ', elem.count);
-      if (elem.count < minCount)  {
+      if (elem.hits < minCount)  {
         minElem = elem;
-        minCount = elem.count;
+        minCount = elem.hits;
       }
       console.log('minCount: ', minCount);
     }
@@ -204,6 +203,7 @@ function App() {
   // reset everything when evictionAlg is changed
   useEffect(() => {
     // clearing timeouts to avoid flickering issue of data elems
+    // source: https://stackoverflow.com/questions/8860188/javascript-clear-all-timeouts
     const highestId = window.setTimeout(() => {
       for (let i = highestId; i >= 0; i--) {
         window.clearInterval(i);
@@ -250,7 +250,7 @@ function App() {
             <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-5"></DataElement>
           </Col>
             <Col md={{span:10, offset:1}}>
-              <Cache id="cache" dataElems={dataElemsInCache} onClick={handleClick}></Cache>
+              <Cache id="cache" dataElems={dataElemsInCache} onClick={handleClick} evictionAlg={evictionAlg}></Cache>
             </Col>
         </Row>
       </Container>
