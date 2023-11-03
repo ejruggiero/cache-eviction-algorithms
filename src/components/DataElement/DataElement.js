@@ -7,19 +7,16 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
   const [currTime, setCurrTime] = useState(time);
   const timerIdRef = useRef(null);
 
-  let count;
-  if (evictionAlg === "lru") {
-    count = currTime;
-    // timerIdRef.current = setInterval(() => {
-    //   setCurrTime((prevCount) => prevCount + 1);
-    //   //count = currTime;
-    // }, 1000);
-  }
-  else count = hits;
+  //let count;
+  // if (evictionAlg === "lru") {
+  //   count = currTime;
+  // }
+  // else count = hits;
 
   useEffect(() => {
     timerIdRef.current = setTimeout(() => {
       setCurrTime(currTime + 1);
+      //count = currTime;
     }, 1000);
   }, [evictionAlg, currTime]);
 
@@ -31,13 +28,19 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
   //   }, 1000);
   // }, [evictionAlg]);
 
-  return (
-    // should be invisible for fifo
-    <label className="countLabel mt-4 ms-5 me-3 mb-1">{currTime}<br/>
-    {/* should have mt-5 for fifo */}
-    {/* <button name={id} id={id} class={`${addBottomMargin} btn btn-warning btn-circle btn-xl mt-2 ms-5 me-4`} onClick={onClick}>{char}</button> */}
-    <button name={id} id={id} class={`${addBottomMargin} btn btn-warning btn-circle btn-xl`} onClick={onClick}>{char}</button>
-    </label>
-    // </div>
-  )
+  if (evictionAlg === "lru") {
+    return (
+      <label className="countLabel mt-4 ms-5 me-3 mb-1">{currTime}<br/>
+      <button name={id} id={id} class={`${addBottomMargin} btn btn-warning btn-circle btn-xl`} onClick={onClick}>{char}</button>
+      </label>
+    )
+  }
+  else {
+    return (
+      <label className="countLabel mt-4 ms-5 me-3 mb-1">{hits}<br/>
+      <button name={id} id={id} class={`${addBottomMargin} btn btn-warning btn-circle btn-xl`} onClick={onClick}>{char}</button>
+      </label>
+    )
+  }
+  
 }
