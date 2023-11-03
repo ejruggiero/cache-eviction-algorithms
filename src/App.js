@@ -161,10 +161,6 @@ function App() {
     let minCount = Number.MAX_SAFE_INTEGER;
     let minElem;
     const incomingEmoji = document.getElementById("incomingElem").textContent;
-    // dataElemsInCache.forEach(function (elem) {
-    //   if (elem.char === incomingEmoji) return elem;
-    //   if (elem.count < minCount)  minElem = elem;
-    // });
     for (let i = 0; i < dataElemsInCache.length; i++) {
       const elem = dataElemsInCache[i];
       if (elem.char === incomingEmoji) return elem;
@@ -226,9 +222,6 @@ function App() {
     <>
       <Container fluid className="p-4 ps-5">
         <Row>
-          {/* <Col md={{ span:1 }}>
-            <Counts className={countsVisibility} dataElemsAndCounts={dataElemsAndCounts}></Counts>
-          </Col> */}
           <Col md={{ span: 1, offset: 3 }}>
           <button className="btn bg-warning text-center rounded mt-1" style={{fontSize: "30px"}} onClick={() => setOpen(true)}>Help</button>
   {open ? <Popup text={[<h1>Welcome!</h1>, <p>Hello! Here you will learn three important cache eviction algorithms: first in first out (FIFO),
@@ -247,7 +240,7 @@ function App() {
         <Row><div id="invisibleSpace" style={{lineHeight: 15}} className="invisible">vertical space</div></Row>
         <Row>
           <Col md={{ span:1 }}>
-            <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-5"></DataElement>
+            <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-3 mt-3"></DataElement>
           </Col>
             <Col md={{span:10, offset:1}}>
               <Cache id="cache" dataElems={dataElemsInCache} onClick={handleClick} evictionAlg={evictionAlg}></Cache>

@@ -7,26 +7,11 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
   const [currTime, setCurrTime] = useState(time);
   const timerIdRef = useRef(null);
 
-  //let count;
-  // if (evictionAlg === "lru") {
-  //   count = currTime;
-  // }
-  // else count = hits;
-
   useEffect(() => {
     timerIdRef.current = setTimeout(() => {
       setCurrTime(currTime + 1);
-      //count = currTime;
     }, 1000);
   }, [evictionAlg, currTime]);
-
-  // useEffect(() => {
-  //   let interval = null;
-  //   interval = setInterval(() => {
-  //     setCurrTime((currTime) => currTime + 1);
-  //     count = currTime;
-  //   }, 1000);
-  // }, [evictionAlg]);
 
   if (evictionAlg === "lru") {
     return (

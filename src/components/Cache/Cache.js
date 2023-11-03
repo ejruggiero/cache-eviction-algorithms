@@ -1,6 +1,6 @@
 import React from 'react'
 import DataElement from '../DataElement/DataElement'
-import { Row, Col } from 'react-bootstrap'
+import "./Cache.css"
 
 export default function Cache({dataElems, onClick, evictionAlg}) {
     const rows = [];
@@ -13,8 +13,16 @@ export default function Cache({dataElems, onClick, evictionAlg}) {
         //rows.push(<Col md={{span:1}}></Col>);
     }
     //console.log("evictionAlg in cache: ", evictionAlg);
+    const fifoText = "The leftmost item was added first and the rightmost item was added last.";
+    const lruText = "The numbers above each item represent the amount of seconds since they have last been added to or accessed in the cache.";
+    const lfuText = "The numbers above each item represent the number of \"hits\", or the amount of requests the cache was able to fulfill for that item.";
+    let details = "";
+    if (evictionAlg === "lfu") details = lfuText;
+    else if (evictionAlg === "lru") details = lruText;
+    else details = fifoText;
     return (
-    
+    <>
+    <div class="evictionAlgInfo">{details}</div>
     <div class="bg-secondary rounded" style={{"height" : "100%"}}>
         <div>
             {/* <button id="cacheInitialHeight" class="btn btn-xl btn-circle invisible"></button>
@@ -33,6 +41,6 @@ export default function Cache({dataElems, onClick, evictionAlg}) {
             <DataElement></DataElement>
         </Row> */}
     </div>
-
+    </>
   )
 }
