@@ -10,9 +10,15 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
   useEffect(() => {
     timerIdRef.current = setTimeout(() => {
       setCurrTime(currTime + 1);
-      time++;
     }, 1000);
   }, [evictionAlg, currTime]);
+
+  useEffect(() => {
+    if (time >= 1) {
+      window.clearInterval(timerIdRef.current);
+      setCurrTime(0);
+    }
+  }, [time]);
 
   if (evictionAlg === "lru") {
     return (

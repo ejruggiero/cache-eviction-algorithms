@@ -20,6 +20,7 @@ import Counts from "./components/Counts/Counts";
 />
 
 function App() {
+  let [globalCounter, setGlobalCounter] = useState(1); // for time in lru to trigger resets of time to 0
   const capacity = 5;
   // let chars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖']
   let fifoChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
@@ -177,6 +178,33 @@ function App() {
   function lru(e) {
     const target = findLruTarget();
     console.log("target: ", target);
+    const incomingElemEmoji = document.getElementById("incomingElem").textContent;
+    const originalEmoji = document.getElementById(e.target.id).textContent;
+
+    if (dataElemsInCache.length === capacity && target.id === e.target.id) {
+      console.log("correct")
+      document.getElementById(e.target.id).disabled = "disabled";
+      document.getElementById(e.target.id).textContent = '✅';
+      setScore(score+1);
+      setGlobalCounter(globalCounter+1);
+      console.log("globalCounter: ", globalCounter);
+      // if it is a hit
+      //if (incomingElemEmoji === target.char) {
+        setTimeout(() => {
+          let tempArr = dataElemsInCache.map((x) => x);
+          const foundIndex = tempArr.findIndex(x => x.id === target.id);
+          tempArr[foundIndex] = {id: target.id, char: target.char, time: globalCounter};
+          setDataElemsInCache(tempArr);
+          var elem = document.getElementById(e.target.id);
+          if (elem) {
+            elem.textContent = originalEmoji;
+            elem.disabled = "";
+          }
+            // update incoming elem
+          //document.getElementById("incomingElem").textContent = availableChars[0];
+        }, 2000);
+      //}
+    }
   }
 
   function findLruTarget() {
