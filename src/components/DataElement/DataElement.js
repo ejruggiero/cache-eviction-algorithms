@@ -10,12 +10,13 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
   useEffect(() => {
     timerIdRef.current = setTimeout(() => {
       setCurrTime(currTime + 1);
+      time++;
     }, 1000);
   }, [evictionAlg, currTime]);
 
   if (evictionAlg === "lru") {
     return (
-      <label className="countLabel mt-4 ms-5 me-3 mb-1">{currTime}<br/>
+      <label id={`countLabel${id}`} className="countLabel mt-4 ms-5 me-3 mb-1">{currTime}<br/>
       <button name={id} id={id} class={`${addBottomMargin} btn btn-warning btn-circle btn-xl`} onClick={onClick}>{char}</button>
       </label>
     )

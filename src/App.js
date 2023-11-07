@@ -94,7 +94,7 @@ function App() {
   function lfu(e) {
     console.log('dataelemsincache[0]: ', dataElemsInCache[0]);
     console.log("in lfu");
-    const target = findTarget();
+    const target = findLfuTarget();
     console.log('target: ', target);
     console.log('data elems in cache: ', dataElemsInCache);
     const incomingElemEmoji = document.getElementById("incomingElem").textContent;
@@ -156,7 +156,7 @@ function App() {
 
   // for LFU. returns elem in cache that is target: either it is the incoming elem or
   // it has lowest count, tie breaking by LRU
-  function findTarget() {
+  function findLfuTarget() {
     // find earliest min count or return incoming elem if in cache
     let minCount = Number.MAX_SAFE_INTEGER;
     let minElem;
@@ -174,12 +174,46 @@ function App() {
     return minElem;
   }
 
+  function lru(e) {
+    const target = findLruTarget();
+    console.log("target: ", target);
+  }
+
+  function findLruTarget() {
+    let maxTime = Number.MIN_SAFE_INTEGER;
+    let maxElem;
+    const incomingEmoji = document.getElementById("incomingElem").textContent;
+    const times = dataElemsInCache.map(elem => {
+      return [parseInt(document.getElementById("countLabel"+elem.id).textContent.replace(document.getElementById(elem.id).textContent, '')), elem];
+    })
+    //console.log("times: ", times);
+    for (let i = 0; i < times.length; i++) {
+      let elem = times[i][1];
+      let time = times[i][0];
+      //console.log("times[",i,"][0] = ", time, ", maxTime = ", maxTime);
+      if (elem.char === incomingEmoji) {
+        //console.log("elem == incomingElem")
+        return elem;
+      }
+      if (time > maxTime)  {
+        //console.log(time, " > ", maxTime);
+        maxElem = elem;
+        maxTime = time;
+      }
+    }
+    //console.log('maxTime: ', maxTime);
+    return maxElem;
+  }
+
   function handleClick(e) {
     if(evictionAlg === "fifo") {
       fifo(e);
     }
     else if (evictionAlg === "lfu") {
       lfu(e);
+    }
+    else if (evictionAlg === "lru") {
+      lru(e);
     }
   }
 
