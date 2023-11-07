@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import { Popup } from "./components/Popup/Popup";
-import Counts from "./components/Counts/Counts";
 
 <link
   rel="stylesheet"
@@ -180,6 +179,8 @@ function App() {
     console.log("target: ", target);
     const incomingElemEmoji = document.getElementById("incomingElem").textContent;
     const originalEmoji = document.getElementById(e.target.id).textContent;
+    console.log("availablechars: ", availableChars);
+    var elem = document.getElementById(e.target.id);
 
     if (dataElemsInCache.length === capacity && target.id === e.target.id) {
       console.log("correct")
@@ -188,22 +189,49 @@ function App() {
       setScore(score+1);
       setGlobalCounter(globalCounter+1);
       console.log("globalCounter: ", globalCounter);
+
+      let tempArr = availableChars.map((x) => x);
+      tempArr.push(originalEmoji); // adding the clicked emoji back to available chars
+      tempArr.shift(); // removing the emoji that became incoming elem
+      setAvailableChars(tempArr);
+
       // if it is a hit
-      //if (incomingElemEmoji === target.char) {
+      if (incomingElemEmoji === target.char) {
         setTimeout(() => {
-          let tempArr = dataElemsInCache.map((x) => x);
+          tempArr = dataElemsInCache.map((x) => x);
           const foundIndex = tempArr.findIndex(x => x.id === target.id);
           tempArr[foundIndex] = {id: target.id, char: target.char, time: globalCounter};
           setDataElemsInCache(tempArr);
-          var elem = document.getElementById(e.target.id);
           if (elem) {
             elem.textContent = originalEmoji;
             elem.disabled = "";
           }
-            // update incoming elem
-          //document.getElementById("incomingElem").textContent = availableChars[0];
+          // update incoming elem
+          document.getElementById("incomingElem").textContent = availableChars[0];
         }, 2000);
-      //}
+      } else { // if not a hit
+        tempArr = dataElemsInCache.filter(function(elem) {
+          return elem.id !== target.id;
+        });
+        tempArr[capacity-1] = {id: uuidv4(), char: incomingElemEmoji, time:0};
+        setTimeout(() => {
+          setDataElemsInCache(tempArr);
+          // update incoming elem
+          document.getElementById("incomingElem").textContent = availableChars[0];
+        }, 2000);
+      }
+      // incorrect answer
+    } else if (dataElemsInCache.length === capacity) {
+      if (elem) {
+        elem.textContent = '❌';
+        elem.disabled = "disabled";
+      }
+      setTimeout(() => {
+        if (elem) {
+          elem.textContent = originalEmoji;
+          elem.disabled = "";
+        }
+      }, 1000);
     }
   }
 
@@ -244,19 +272,6 @@ function App() {
       lru(e);
     }
   }
-
-  // set line height of invisible space based on eviction alg to make sure
-  // cache is always visible
-  // show counts table if eviction alg is not fifo
-  // useEffect(() => {
-  //   if (evictionAlg === "fifo") {
-  //     setCountsVisibility("invisible")
-  //     document.getElementById("invisibleSpace").style.lineHeight = "15";
-  //   } else {
-  //     setCountsVisibility("");
-  //     document.getElementById("invisibleSpace").style.lineHeight = "5";
-  //   }
-  // }, [evictionAlg]);
 
   // reset everything when evictionAlg is changed
   useEffect(() => {
