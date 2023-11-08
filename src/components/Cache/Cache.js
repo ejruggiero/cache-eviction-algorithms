@@ -14,8 +14,8 @@ export default function Cache({dataElems, onClick, evictionAlg}) {
     }
     //console.log("evictionAlg in cache: ", evictionAlg);
     const fifoText = "The leftmost item was added first and the rightmost item was added last.";
-    const lruText = "The numbers above each item represent the amount of seconds since they have last been added to or accessed in the cache.";
-    const lfuText = "The numbers above each item represent the number of \"hits\", or the amount of requests the cache was able to fulfill for that item.";
+    const lruText = "The numbers represent the seconds since the item was added to or accessed in the cache.";
+    const lfuText = "The numbers represent consecutive adds to or accesses in the cache. Tie break by LRU."
     let details = "";
     if (evictionAlg === "lfu") details = lfuText;
     else if (evictionAlg === "lru") details = lruText;

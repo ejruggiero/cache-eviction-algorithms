@@ -307,7 +307,7 @@ function App() {
         <Row><div id="invisibleSpace" style={{lineHeight: 15}} className="invisible">vertical space</div></Row>
         <Row>
           <Col md={{ span:1 }}>
-            <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-3 mt-3"></DataElement>
+            <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-1 mt-5"></DataElement>
           </Col>
             <Col md={{span:10, offset:1}}>
               <Cache id="cache" dataElems={dataElemsInCache} onClick={handleClick} evictionAlg={evictionAlg}></Cache>
