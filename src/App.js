@@ -9,7 +9,9 @@ import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import { Help } from "./components/Help/Help";
-import { fifo, lfu, lru } from "./functions/functions.js";
+import { fifo } from "./functions/fifo.js";
+import { lfu } from "./functions/lfu.js";
+import { lru } from "./functions/lru.js";
 
 <link
   rel="stylesheet"
@@ -21,11 +23,9 @@ import { fifo, lfu, lru } from "./functions/functions.js";
 function App() {
   let [globalCounter, setGlobalCounter] = useState(1); // for time in lru to trigger resets of time to 0
   const capacity = 5;
-  // let chars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖']
   let fifoChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
   let lfuChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🐉', '🐷', '🐴', '🐴', '🍀', '🍀', '😎', '🍀', '🙈', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
-  // let [availableChars, setAvailableChars] = useState(chars);
   let [availableChars, setAvailableChars] = useState(fifoChars);
   let [score, setScore] = useState(0);
   let [evictionAlg, setEvictionAlg] = useState("fifo");
@@ -35,7 +35,6 @@ function App() {
     setTimeout(() => {
       const newChar = availableChars[0];
       setAvailableChars([...availableChars].splice(1));
-      //console.log(availableChars);
       let newElem;
       if(evictionAlg === "fifo") {
         newElem = {id: uuidv4(), char: newChar};
@@ -49,6 +48,7 @@ function App() {
     }, 1000);
   }
 
+  // handleClick takes an event and calls fifo, lfu, or lru depending on the eviction algorithm chosen in the EvictionAlg component
   function handleClick(e) {
     if(evictionAlg === "fifo") {
       fifo(e, dataElemsInCache, capacity, score, setScore, setDataElemsInCache, availableChars, setAvailableChars);
