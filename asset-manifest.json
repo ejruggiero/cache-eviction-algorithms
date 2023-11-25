@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/cache-eviction-algorithms/static/css/main.5b76ba28.css",
+    "main.js": "/cache-eviction-algorithms/static/js/main.acbab704.js",
+    "static/js/787.41e975c7.chunk.js": "/cache-eviction-algorithms/static/js/787.41e975c7.chunk.js",
+    "index.html": "/cache-eviction-algorithms/index.html",
+    "main.5b76ba28.css.map": "/cache-eviction-algorithms/static/css/main.5b76ba28.css.map",
+    "main.acbab704.js.map": "/cache-eviction-algorithms/static/js/main.acbab704.js.map",
+    "787.41e975c7.chunk.js.map": "/cache-eviction-algorithms/static/js/787.41e975c7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5b76ba28.css",
+    "static/js/main.acbab704.js"
+  ]
+}
