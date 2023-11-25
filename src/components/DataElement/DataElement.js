@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import './DataElement.css';
 
-export default function DataElement({id, char, onClick, addBottomMargin="", hits, time, evictionAlg}) {
+export default function DataElement({id, char, onClick, addBottomMargin="", hits, time, evictionAlg, disabled=false}) {
 
   const [currTime, setCurrTime] = useState(time);
   const timerIdRef = useRef(null);
@@ -19,6 +19,18 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
       setCurrTime(0);
     }
   }, [time]);
+
+  useEffect(() => {
+    console.log("in disabled useEffect");
+    if (disabled) {
+      console.log("disabled");
+      document.getElementById(id).disabled = "disabled";
+    }
+    else {
+      console.log("not disabled");
+      document.getElementById(id).disabled = "";
+    }
+  }, [disabled])
 
   if (evictionAlg === "lru") {
     return (

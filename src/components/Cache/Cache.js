@@ -7,7 +7,7 @@ export default function Cache({dataElems, onClick, evictionAlg}) {
     for (let i = 0; i < dataElems.length; i++) {
         // note: we are adding a key prop here to allow react to uniquely identify each
         // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
-        rows.push(<DataElement key={dataElems[i].id} id={dataElems[i].id} char={dataElems[i].char} onClick={onClick} dataElems={dataElems} hits={dataElems[i].hits} time={dataElems[i].time} evictionAlg={evictionAlg}/>);
+        rows.push(<DataElement key={dataElems[i].id} id={dataElems[i].id} char={dataElems[i].char} onClick={onClick} dataElems={dataElems} hits={dataElems[i].hits} time={dataElems[i].time} evictionAlg={evictionAlg} disabled={dataElems[i].disabled}/>);
     }
 
     const fifoText = "The leftmost item was added first and the rightmost item was added last.";

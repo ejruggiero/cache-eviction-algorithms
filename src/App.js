@@ -37,7 +37,7 @@ function App() {
       setAvailableChars([...availableChars].splice(1));
       let newElem;
       if(evictionAlg === "fifo") {
-        newElem = {id: uuidv4(), char: newChar};
+        newElem = {id: uuidv4(), char: newChar, disabled: false};
       }
       else if (evictionAlg === "lfu") {
         newElem = {id: uuidv4(), char: newChar, hits: 1};
