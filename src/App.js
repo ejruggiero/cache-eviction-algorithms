@@ -51,10 +51,10 @@ function App() {
   // handleClick takes an event and calls fifo, lfu, or lru depending on the eviction algorithm chosen in the EvictionAlg component
   function handleClick(e) {
     if(evictionAlg === "fifo") {
-      fifo(e, dataElemsInCache, capacity, score, setScore, setDataElemsInCache, availableChars, setAvailableChars);
+      fifo(e, document.getElementById(e.target.id), dataElemsInCache, capacity, score, setScore, setDataElemsInCache, availableChars, setAvailableChars, document.getElementById("incomingElem"), document.getElementById("incomingElem").textContent);
     }
     else if (evictionAlg === "lfu") {
-      lfu(e, dataElemsInCache, capacity, score, setScore, availableChars, setAvailableChars, setDataElemsInCache);
+      lfu(e, document.getElementById(e.target.id), dataElemsInCache, capacity, score, setScore, availableChars, setAvailableChars, setDataElemsInCache, document.getElementById("incomingElem"), document.getElementById("incomingElem").textContent);
     }
     else if (evictionAlg === "lru") {
       lru(e, dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter);
