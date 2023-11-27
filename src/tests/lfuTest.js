@@ -1,9 +1,5 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { lfu } from "../functions/lfu.js";
 import assert from "assert";
-
-// import pkg from '../functions/fifo.js';
-// const { fifo } = pkg;
 
 let dataElemsInCache = [{id: 1, char: 'a', hits: 1}, {id: 2, char: 'b', hits: 1}, {id: 3, char: 'c', hits: 1}, {id: 4, char: 'd', hits: 1}, {id: 5, char: 'e', hits: 1}];
 let capacity = 5;
