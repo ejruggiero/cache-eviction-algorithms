@@ -57,7 +57,10 @@ function App() {
       lfu(e, document.getElementById(e.target.id), dataElemsInCache, capacity, score, setScore, availableChars, setAvailableChars, setDataElemsInCache, document.getElementById("incomingElem"), document.getElementById("incomingElem").textContent);
     }
     else if (evictionAlg === "lru") {
-      lru(e, dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter);
+      const times = dataElemsInCache.map(elem => {
+        return [parseInt(document.getElementById("countLabel"+elem.id).textContent.replace(document.getElementById(elem.id).textContent, '')), elem];
+      })
+      lru(e, document.getElementById(e.target.id), dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter, document.getElementById("incomingElem"), document.getElementById("incomingElem").textContent, times);
     }
   }
 

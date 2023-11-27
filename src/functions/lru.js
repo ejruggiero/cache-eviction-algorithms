@@ -1,17 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export function lru(e, dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter) {
-    const target = findLruTarget(dataElemsInCache);
+export function lru(e, clickedElem, dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter, incomingElem, incomingElemEmoji, times) {
+    console.log("times: ", times);
+    const target = findLruTarget(incomingElemEmoji, times);
     console.log("target: ", target);
-    const incomingElemEmoji = document.getElementById("incomingElem").textContent;
-    const originalEmoji = document.getElementById(e.target.id).textContent;
+    //const incomingElemEmoji = document.getElementById("incomingElem").textContent;
+    const originalEmoji = clickedElem.textContent;
     console.log("availablechars: ", availableChars);
-    var elem = document.getElementById(e.target.id);
+    //var elem = document.getElementById(e.target.id);
 
     if (dataElemsInCache.length === capacity && target.id === e.target.id) {
       console.log("correct")
-      document.getElementById(e.target.id).disabled = "disabled";
-      document.getElementById(e.target.id).textContent = '✅';
+      clickedElem.disabled = "disabled";
+      clickedElem.textContent = '✅';
       setScore(score+1);
       setGlobalCounter(globalCounter+1);
       console.log("globalCounter: ", globalCounter);
@@ -28,12 +29,12 @@ export function lru(e, dataElemsInCache, setDataElemsInCache, availableChars, se
           const foundIndex = tempArr.findIndex(x => x.id === target.id);
           tempArr[foundIndex] = {id: target.id, char: target.char, time: globalCounter};
           setDataElemsInCache(tempArr);
-          if (elem) {
-            elem.textContent = originalEmoji;
-            elem.disabled = "";
-          }
+
+          clickedElem.textContent = originalEmoji;
+          clickedElem.disabled = "";
+
           // update incoming elem
-          document.getElementById("incomingElem").textContent = availableChars[0];
+          incomingElem.textContent = availableChars[0];
         }, 2000);
       } else { // if not a hit
         tempArr = dataElemsInCache.filter(function(elem) {
@@ -43,37 +44,33 @@ export function lru(e, dataElemsInCache, setDataElemsInCache, availableChars, se
         setTimeout(() => {
           setDataElemsInCache(tempArr);
           // update incoming elem
-          document.getElementById("incomingElem").textContent = availableChars[0];
+          incomingElem.textContent = availableChars[0];
         }, 2000);
       }
       // incorrect answer
     } else if (dataElemsInCache.length === capacity) {
-      if (elem) {
-        elem.textContent = '❌';
-        elem.disabled = "disabled";
-      }
+      clickedElem.textContent = '❌';
+      clickedElem.disabled = "disabled";
       setTimeout(() => {
-        if (elem) {
-          elem.textContent = originalEmoji;
-          elem.disabled = "";
-        }
+        clickedElem.textContent = originalEmoji;
+        clickedElem.disabled = "";
       }, 1000);
     }
 }
 
-function findLruTarget(dataElemsInCache) {
+function findLruTarget(incomingElemEmoji, times) {
     let maxTime = Number.MIN_SAFE_INTEGER;
     let maxElem;
-    const incomingEmoji = document.getElementById("incomingElem").textContent;
-    const times = dataElemsInCache.map(elem => {
-      return [parseInt(document.getElementById("countLabel"+elem.id).textContent.replace(document.getElementById(elem.id).textContent, '')), elem];
-    })
+    //const incomingEmoji = document.getElementById("incomingElem").textContent;
+    // const times = dataElemsInCache.map(elem => {
+    //   return [parseInt(document.getElementById("countLabel"+elem.id).textContent.replace(document.getElementById(elem.id).textContent, '')), elem];
+    // })
     //console.log("times: ", times);
     for (let i = 0; i < times.length; i++) {
       let elem = times[i][1];
       let time = times[i][0];
       //console.log("times[",i,"][0] = ", time, ", maxTime = ", maxTime);
-      if (elem.char === incomingEmoji) {
+      if (elem.char === incomingElemEmoji) {
         //console.log("elem == incomingElem")
         return elem;
       }
