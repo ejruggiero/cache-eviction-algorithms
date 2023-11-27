@@ -3,7 +3,7 @@ import assert from "assert";
 
 function fifoTest() {
     fifoCorrect();
-    fifoWrong();
+    fifoIncorrect();
 }
 
 function fifoCorrect() {
@@ -36,7 +36,7 @@ function fifoCorrect() {
 }
 
 // tests behavior when user is incorrect
-function fifoWrong() {
+function fifoIncorrect() {
     let dataElemsInCache = [{id: 1, char: 'a'}, {id: 2, char: 'b'}, {id: 3, char: 'c'}, {id: 4, char: 'd'}, {id: 5, char: 'e'}];
     let capacity = 5;
     let score = 0;
