@@ -23,8 +23,9 @@ import { lru } from "./functions/lru.js";
 function App() {
   let [lruChangeCounter, setLruChangeCounter] = useState(1); // for time in lru to trigger resets of time to 0
   const capacity = 5;
-  let fifoChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
+  let fifoChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖', '🐙', '🦋', '🍉', '🍌', '🍎', '🍄', '🥨', '👓', '🌈', '🔥', '🎈', '🧤', '🎥'];
   let lfuChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🐉', '🐷', '🐴', '🐴', '🍀', '🍀', '😎', '🍀', '🙈', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
+  let lruChars = ['🦋', '🍉', '🍌', '🍎', '🍄', '🍌', '🥨', '🍄', '🥨', '🍎', '👓', '🌈', '🍎', '👓', '🐴', '🍀', '🦖', '🐙', '🍀'];
   let [dataElemsInCache, setDataElemsInCache] = useState([]);
   let [availableChars, setAvailableChars] = useState(fifoChars);
   let [score, setScore] = useState(0);
@@ -79,8 +80,10 @@ function App() {
     setDataElemsInCache([]);
     if (evictionAlg === "fifo") {
       setAvailableChars(fifoChars);
-    } else if (evictionAlg === "lfu" || evictionAlg === "lru") {
+    } else if (evictionAlg === "lfu") {
       setAvailableChars(lfuChars);
+    } else if (evictionAlg === "lru") {
+      setAvailableChars(lruChars);
     }
     console.log("eviction alg is " + evictionAlg);
   }, [evictionAlg]);
@@ -90,7 +93,8 @@ function App() {
     <>
       <Container fluid className="p-4 ps-5">
         <Row>
-          <Col md={{ span: 1, offset: 3 }}>
+          <Col md={{ span: 3 }}><h2>Cache Eviction Algorithms Visualizer</h2></Col>
+          <Col md={{ span: 1 }}>
             <Help />
           </Col>
           <Col md={{ span: 4 }}><EvictionAlg setEvictionAlg={setEvictionAlg}></EvictionAlg></Col>
@@ -101,7 +105,7 @@ function App() {
           <Col md={{ span:1 }}>
             <DataElement id="incomingElem" char='🤷‍♂️' addBottomMargin="mb-1 mt-5"></DataElement>
           </Col>
-            <Col md={{span:10, offset:1}}>
+            <Col md={{ span:10, offset:1 }}>
               <Cache id="cache" dataElems={dataElemsInCache} onClick={handleClick} evictionAlg={evictionAlg}></Cache>
             </Col>
         </Row>
