@@ -2,9 +2,9 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import './DataElement.css';
 
-export default function DataElement({id, char, onClick, addBottomMargin="", hits, time, evictionAlg, disabled=false}) {
+export default function DataElement({id, char, onClick, addBottomMargin="", hits, lruChange, evictionAlg, disabled=false}) {
 
-  const [currTime, setCurrTime] = useState(time);
+  const [currTime, setCurrTime] = useState(lruChange);
   const timerIdRef = useRef(null);
 
   useEffect(() => {
@@ -14,11 +14,11 @@ export default function DataElement({id, char, onClick, addBottomMargin="", hits
   }, [evictionAlg, currTime]);
 
   useEffect(() => {
-    if (time >= 1) {
+    if (lruChange >= 1) {
       window.clearInterval(timerIdRef.current);
       setCurrTime(0);
     }
-  }, [time]);
+  }, [lruChange]);
 
   useEffect(() => {
     console.log("in disabled useEffect");

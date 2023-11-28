@@ -21,7 +21,7 @@ import { lru } from "./functions/lru.js";
 />
 
 function App() {
-  let [globalCounter, setGlobalCounter] = useState(1); // for time in lru to trigger resets of time to 0
+  let [lruChangeCounter, setLruChangeCounter] = useState(1); // for time in lru to trigger resets of time to 0
   const capacity = 5;
   let fifoChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🍀', '😎', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
   let lfuChars = ['🦊', '🐉', '🐴', '🐷', '😜', '🐉', '🐷', '🐴', '🐴', '🍀', '🍀', '😎', '🍀', '🙈', '🙈', '❤', '🧠', '🐢', '🕺', '🌺', '🦖'];
@@ -42,7 +42,7 @@ function App() {
       else if (evictionAlg === "lfu") {
         newElem = {id: uuidv4(), char: newChar, hits: 1};
       } else {
-        newElem = {id: uuidv4(), char: newChar, time: 0};
+        newElem = {id: uuidv4(), char: newChar, lruChange: 0};
       }
       setDataElemsInCache([...dataElemsInCache, newElem]);
     }, 1000);
@@ -60,7 +60,7 @@ function App() {
       const times = dataElemsInCache.map(elem => {
         return [parseInt(document.getElementById("countLabel"+elem.id).textContent.replace(document.getElementById(elem.id).textContent, '')), elem];
       })
-      lru(e, document.getElementById(e.target.id), dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter, document.getElementById("incomingElem"), document.getElementById("incomingElem").textContent, times);
+      lru(e, document.getElementById(e.target.id), dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, lruChangeCounter, setLruChangeCounter, document.getElementById("incomingElem"), document.getElementById("incomingElem").textContent, times);
     }
   }
 
