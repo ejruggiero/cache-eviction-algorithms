@@ -6,6 +6,7 @@ function fifoTest() {
     fifoIncorrect();
 }
 
+// tests behavior of fifo when user is correct
 function fifoCorrect() {
     let dataElemsInCache = [{id: 1, char: 'a'}, {id: 2, char: 'b'}, {id: 3, char: 'c'}, {id: 4, char: 'd'}, {id: 5, char: 'e'}];
     let capacity = 5;
@@ -24,7 +25,7 @@ function fifoCorrect() {
     fifo({target: {innerHTML: 'a', id:1}}, {style: {display: ""}}, dataElemsInCache, capacity, score, setScore, setDataElemsInCache, availableChars, setAvailableChars, {innerHTML:'f'}, 'f');
 
     assert(score === 1);
-    assert(capacity === 5);
+    assert(dataElemsInCache.length === 5);
     
     setTimeout(() => {
         assert(dataElemsInCache[0].char === 'b');
@@ -35,7 +36,7 @@ function fifoCorrect() {
     }, 2000);
 }
 
-// tests behavior when user is incorrect
+// tests behavior of fifo when user is incorrect
 function fifoIncorrect() {
     let dataElemsInCache = [{id: 1, char: 'a'}, {id: 2, char: 'b'}, {id: 3, char: 'c'}, {id: 4, char: 'd'}, {id: 5, char: 'e'}];
     let capacity = 5;
@@ -54,7 +55,7 @@ function fifoIncorrect() {
     fifo({target: {innerHTML: 'b', id: 2}}, {style: {display: ""}}, dataElemsInCache, capacity, score, setScore, setDataElemsInCache, availableChars, setAvailableChars, {innerHTML:'f'}, 'f');
 
     assert(score === 0);
-    assert(capacity === 5);
+    assert(dataElemsInCache.length === 5);
     
     setTimeout(() => {
         assert(dataElemsInCache[0].char === 'a');
