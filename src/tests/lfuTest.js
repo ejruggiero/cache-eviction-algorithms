@@ -3,6 +3,7 @@ import assert from "assert";
 
 function lfuTest() {
     lfuCorrect();
+    lfuIncorrect();
 }
 
 // tests behavior of lfu when user is correct
@@ -52,7 +53,7 @@ function lfuIncorrect() {
         availableChars = newAvailableChars;
     }
 
-    lfu({target: {innerHTML: 'e', id:3}}, {}, dataElemsInCache, capacity, score, setScore, availableChars, setAvailableChars, setDataElemsInCache, {innerHTML:'f'}, 'f');
+    lfu({target: {innerHTML: 'd', id:4}}, {}, dataElemsInCache, capacity, score, setScore, availableChars, setAvailableChars, setDataElemsInCache, {innerHTML:'f'}, 'f');
 
     assert(score === 0);
     assert(dataElemsInCache.length === 5);

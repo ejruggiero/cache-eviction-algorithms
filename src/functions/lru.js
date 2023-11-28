@@ -1,21 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export function lru(e, clickedElem, dataElemsInCache, setDataElemsInCache, availableChars, setAvailableChars, capacity, score, setScore, globalCounter, setGlobalCounter, incomingElem, incomingElemEmoji, times) {
-    console.log("times: ", times);
+    //console.log("times: ", times);
     const target = findLruTarget(incomingElemEmoji, times);
-    console.log("target: ", target);
+    //console.log("target: ", target);
     //const incomingElemEmoji = document.getElementById("incomingElem").textContent;
     const originalEmoji = clickedElem.textContent;
-    console.log("availablechars: ", availableChars);
+    //console.log("availablechars: ", availableChars);
     //var elem = document.getElementById(e.target.id);
 
     if (dataElemsInCache.length === capacity && target.id === e.target.id) {
-      console.log("correct")
+      //console.log("correct")
       clickedElem.disabled = "disabled";
       clickedElem.textContent = '✅';
       setScore(score+1);
       setGlobalCounter(globalCounter+1);
-      console.log("globalCounter: ", globalCounter);
+      //console.log("globalCounter: ", globalCounter);
 
       let tempArr = availableChars.map((x) => x);
       tempArr.push(originalEmoji); // adding the clicked emoji back to available chars
