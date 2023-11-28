@@ -40,7 +40,7 @@ export function lru(e, clickedElem, dataElemsInCache, setDataElemsInCache, avail
           incomingElem.textContent = availableChars[0];
         }, 2000);
       }
-      // incorrect answer
+    // if elem clicked is incorrect
     } else if (dataElemsInCache.length === capacity) {
       clickedElem.textContent = '❌';
       clickedElem.disabled = "disabled";

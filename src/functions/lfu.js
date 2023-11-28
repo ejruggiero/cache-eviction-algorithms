@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 export function lfu(e, clickedElem, dataElemsInCache, capacity, score, setScore, availableChars, setAvailableChars, setDataElemsInCache, incomingElem, incomingElemEmoji) {
     const target = findLfuTarget(dataElemsInCache, incomingElemEmoji);
     const originalEmoji = e.target.innerHTML;
-    //console.log("target: ", target)
     if (dataElemsInCache.length === capacity && target.id === e.target.id) {
       clickedElem.disabled = "disabled";
       clickedElem.textContent = '✅';
@@ -18,7 +17,6 @@ export function lfu(e, clickedElem, dataElemsInCache, capacity, score, setScore,
         if (incomingElemEmoji === target.char) {
           console.log("incomingElemEmoji === target.char");
           setTimeout(() => {
-            // setDataElemsInCache(dataElemsInCache.map((x) => {return {id: x.id, char: x.char, count: x.count+1}}));
             tempArr = dataElemsInCache.map((x) => x);
             const foundIndex = tempArr.findIndex(x => x.id === target.id);
             tempArr[foundIndex] = {id: target.id, char: target.char, hits: target.hits+1};
@@ -40,6 +38,7 @@ export function lfu(e, clickedElem, dataElemsInCache, capacity, score, setScore,
           }, 2000);
         }
       }
+    // if elem clicked is incorrect
     } else if (dataElemsInCache.length === capacity) {
       clickedElem.textContent = '❌';
       clickedElem.disabled = "disabled";
