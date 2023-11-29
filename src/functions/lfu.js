@@ -49,7 +49,7 @@ export function lfu(e, clickedElem, dataElemsInCache, capacity, score, setScore,
     }
   }
 
-  // for LFU. returns elem in cache that is target: either it is the incoming elem or
+  // returns elem in cache that is target: either it is the incoming elem or
   // it has lowest count, tie breaking by LRU
   function findLfuTarget(dataElemsInCache, incomingElemEmoji) {
     // find earliest min count or return incoming elem if in cache

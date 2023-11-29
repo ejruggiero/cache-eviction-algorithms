@@ -5,8 +5,6 @@ import "./Cache.css"
 export default function Cache({dataElems, onClick, evictionAlg}) {
     const rows = [];
     for (let i = 0; i < dataElems.length; i++) {
-        // note: we are adding a key prop here to allow react to uniquely identify each
-        // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
         rows.push(<DataElement key={dataElems[i].id} id={dataElems[i].id} char={dataElems[i].char} onClick={onClick} dataElems={dataElems} hits={dataElems[i].hits} lruChange={dataElems[i].lruChange} evictionAlg={evictionAlg} disabled={dataElems[i].disabled}/>);
     }
 
