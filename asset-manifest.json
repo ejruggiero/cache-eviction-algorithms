@@ -1,20 +1,19 @@
 {
   "files": {
     "main.css": "/cache-eviction-algorithms/static/css/main.2f4efbd7.css",
-    "main.js": "/cache-eviction-algorithms/static/js/main.ca437ed6.js",
+    "main.js": "/cache-eviction-algorithms/static/js/main.d8ea5bce.js",
     "static/js/787.41e975c7.chunk.js": "/cache-eviction-algorithms/static/js/787.41e975c7.chunk.js",
     "static/media/data_elem.png": "/cache-eviction-algorithms/static/media/data_elem.4832377259a47ecd8c49.png",
     "static/media/incoming_elem.png": "/cache-eviction-algorithms/static/media/incoming_elem.3f4cb5189d4dc73e7bf0.png",
     "static/media/cache.png": "/cache-eviction-algorithms/static/media/cache.5fe6c5b91cc7dba95adb.png",
-    "static/media/score.png": "/cache-eviction-algorithms/static/media/score.5cda5a78807779cd6515.png",
     "static/media/dropdown.png": "/cache-eviction-algorithms/static/media/dropdown.954053c5a9329d2c8a04.png",
     "index.html": "/cache-eviction-algorithms/index.html",
     "main.2f4efbd7.css.map": "/cache-eviction-algorithms/static/css/main.2f4efbd7.css.map",
-    "main.ca437ed6.js.map": "/cache-eviction-algorithms/static/js/main.ca437ed6.js.map",
+    "main.d8ea5bce.js.map": "/cache-eviction-algorithms/static/js/main.d8ea5bce.js.map",
     "787.41e975c7.chunk.js.map": "/cache-eviction-algorithms/static/js/787.41e975c7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2f4efbd7.css",
-    "static/js/main.ca437ed6.js"
+    "static/js/main.d8ea5bce.js"
   ]
 }
