@@ -7,7 +7,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 To deploy the react app to GitHub Pages, run the command "npm run deploy" after you have pushed all of your code to the remote repository.
 
 ## Testing
-To perform testing, add the line "type": "module" to package.json. Then, navigate to the tests folder and run "node fifoTest.js."
+To perform testing, add the line "type": "module" to package.json. Then, navigate to the tests folder and run "node fifoTest.js", "node lfuTest.js", or "node lruTest.js".
 
 ## Thanks
 Special thanks to my professor Dr. Robert Fish and my teaching assistant Drew Curran for their help and guidance!
